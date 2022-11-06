@@ -1,0 +1,458 @@
+---
+title: "TASK 3 - Assessment 2"
+output: html_document
+date: '2022-10-04'
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(error = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+```{r}
+mbdat<-read.csv("MobilePhoneData.csv", header=FALSE)
+install.packages("ggplot2", repos = "http://cran.us.r-project.org")
+library(ggplot2)
+
+
+mbdat2 <- setNames(data.frame(t(mbdat[,-1])), mbdat[, 1])
+
+head(mbdat2)
+summary(mbdat2)
+```
+
+
+```{r}
+any(is.na(mbdat2))
+
+sapply(mbdat2, class)
+```
+
+
+```{r}
+#change variables to numeric
+ID<-as.numeric(factor(mbdat2$ID))
+bpower<-as.numeric(mbdat2$battery_power)
+blue<-as.numeric(mbdat2$blue)
+cspeed<-as.numeric(mbdat2$clock_speed)
+dsim<-as.numeric(mbdat2$dual_sim)
+dsim1<-ifelse(mbdat2$dual_sim == "YES", 1, 0)
+fc1<-as.numeric(mbdat2$fc)
+fg1<-as.numeric(mbdat2$four_g)
+int_mem<-as.numeric(mbdat2$int_memory)       
+m_dep1<-as.numeric(mbdat2$m_dep)
+mobile_wt1<-as.numeric(mbdat2$mobile_wt)
+n_cores1<-as.numeric(mbdat2$n_cores)
+pc1<-as.numeric(mbdat2$pc)
+px_height1<-as.numeric(mbdat2$px_height)
+px_width1<-as.numeric(mbdat2$px_width)
+ram1<-as.numeric(mbdat2$ram)
+sc_h1<-as.numeric(mbdat2$sc_h)
+sc_w1<-as.numeric(mbdat2$sc_w)
+talk_time1<-as.numeric(mbdat2$talk_time)
+three_g1<-ifelse(mbdat2$three_g == "YES", 1, 0)
+touch_screen1<-as.numeric(mbdat2$touch_screen)
+wifi1<-ifelse(mbdat2$wifi == "YES", 1, 0)
+
+```
+
+```{r}
+#normalise variables
+
+range(ID)
+ID2 <-(ID-min(ID))/(max(ID)-min(ID))
+
+range(bpower)
+bpower2<-na.omit(bpower)
+bpower3 <-(bpower2-min(bpower2))/(max(bpower2)-min(bpower2))
+
+range(blue)
+
+range(cspeed)
+cspeed2<-(cspeed-min(cspeed))/(max(cspeed)-min(cspeed))
+
+range(dsim)
+
+range(fc1)
+fc2<-na.omit(fc1)
+fc3<-(fc2-min(fc2))/(max(fc2)-min(fc2))
+
+range(fg1)
+fg2<-na.omit(fg1)
+fg3 <-(fg2-min(fg2))/(max(fg2)-min(fg2))
+
+range(int_mem)
+int_memory2<-na.omit(int_mem)
+int_memory3 <-(int_memory2-min(int_memory2))/(max(int_memory2)-min(int_memory2))
+
+range(m_dep2)
+m_dep2<-na.omit(m_dep1)
+m_dep3 <-(m_dep2-min(m_dep2))/(max(m_dep2)-min(m_dep2))
+
+range(mobile_wt1)
+mobile_wt2<-na.omit(mobile_wt1)
+mobile_wt3 <-(mobile_wt2-min(mobile_wt2))/(max(mobile_wt2)-min(mobile_wt2))
+
+range(n_cores1)
+n_cores2<-na.omit(n_cores1)
+n_cores3<-(n_cores2-min(n_cores2))/(max(n_cores2)-min(n_cores2))
+
+range(pc1)
+pc2<-na.omit(pc1)
+pc3<-(pc2-min(pc2))/(max(pc2)-min(pc2))
+
+range(px_height1)
+px_height3<-(px_height1-min(px_height1))/(max(px_height1)-min(px_height1))
+
+range(px_width1)
+px_width2<-na.omit(px_width1)
+px_width3<-(px_width2-min(px_width2))/(max(px_width2)-min(px_width2))
+
+range(ram1)
+ram2<-na.omit(ram1)
+ram3<-(ram2-min(ram2))/(max(ram2)-min(ram2))
+
+range(sc_h1)
+sc_h2<-na.omit(sc_h1)
+sc_h3<-(sc_h2-min(sc_h2))/(max(sc_h2)-min(sc_h2))
+
+range(sc_w1)
+sc_w3<-(sc_w1-min(sc_w1))/(max(sc_w1)-min(sc_w1))
+
+range(talk_time1)
+talk_time3<-(talk_time1-min(talk_time1))/(max(talk_time1)-min(talk_time1))
+
+range(three_g1)
+
+range(touch_screen1)
+
+range(wifi1)
+```
+
+
+```{r}
+
+ggplot(data=mbdat2, aes(x=bpower))+
+  geom_histogram( color="black") + 
+  xlab("Speed") +  ylab("Frequency") + 
+  ggtitle("Histogram of Battery Power")
+```
+
+
+```{r}
+ggplot(data=mbdat2, aes(x=cspeed))+
+  geom_histogram( color="black") + 
+  xlab("Speed") +  ylab("Frequency") + 
+  ggtitle("Histogram of Devices with Clock Speed")
+
+```
+
+
+```{r}
+ggplot(data=mbdat2, aes(x=fc1))+
+  geom_histogram(color="black") + 
+  xlab("Front Camera") + ylab("Frequency") + 
+  ggtitle("Histogram of Front Camera Pixels")
+
+```
+
+
+```{r}
+ggplot(data=mbdat2, aes(x=int_mem))+
+  geom_histogram(color="black") + 
+  xlab("Giga bytes") + ylab("Frequency") + 
+  ggtitle("Histogram of Internal Memory")
+```
+
+```{r}
+ggplot(data=mbdat2, aes(x=m_dep1))+
+  geom_histogram(color="black") + 
+  xlab("Unique ID") + ylab("Frequency") + 
+  ggtitle("Histogram of Mobile Depth in cm")
+
+```
+
+```{r}
+ggplot(data=mbdat2, aes(x=mobile_wt1))+
+  geom_histogram(color="black") + 
+  xlab("Mobile Weight") + ylab("Frequency") + 
+  ggtitle("Histogram of Mobile Weight")
+```
+```{r}
+ggplot(data=mbdat2, aes(x=n_cores1))+
+  geom_histogram(color="black") + 
+  xlab("Core Processors") + ylab("Frequency") + 
+  ggtitle("Histogram of Number of Core Processors")
+```
+```{r}
+ggplot(data=mbdat2, aes(x=pc1))+
+  geom_histogram(color="black") + 
+  xlab("Primary Camera Mega Pixels") + ylab("Frequency") + 
+  ggtitle("Histogram of Primary Camera Mega Pixels")
+```
+
+```{r}
+ggplot(data=mbdat2, aes(x=px_height1))+
+  geom_histogram(color="black") + 
+  xlab("Pixel Height") + ylab("Frequency") + 
+  ggtitle("Histogram of Pixel Height")
+```
+```{r}
+
+ggplot(data=mbdat2, aes(x=px_width1))+
+  geom_histogram(color="black") + 
+  xlab("Pixel Widths") + ylab("Frequency") + 
+  ggtitle("Histogram of Pixel Widths")
+          
+```
+
+
+```{r}
+ggplot(data=mbdat2, aes(x=ram1))+
+  geom_histogram(color="black") + 
+  xlab("Ram") + ylab("Frequency") + 
+  ggtitle("Histogram of Ram")
+```
+
+```{r}
+ggplot(data=mbdat2, aes(x=sc_h1))+
+  geom_histogram(color="black") + 
+  xlab("Screen Height") + ylab("Frequency") + 
+  ggtitle("Screen Height of Mobile in cm")
+```
+
+
+```{r}
+ggplot(data=mbdat2, aes(x=sc_w1))+
+  geom_histogram(color="black") + 
+  xlab("Screen Width") + ylab("Frequency") + 
+  ggtitle("Histogram of Screen Width")
+```
+
+```{r}
+ggplot(data=mbdat2, aes(x=talk_time1))+
+  geom_histogram(color="black") + 
+  xlab("Talk Time") + ylab("Frequency") + 
+  ggtitle("Histogram of Talk Time")
+```
+```{r}
+#battery power
+mean(bpower2)
+median(bpower2)
+mode(bpower2)
+range(bpower2)
+
+#blue
+mean(blue)
+median(blue)
+mode(blue)
+range(blue)
+
+#cspeed
+mean(cspeed)
+median(cspeed)
+mode(cspeed)
+range(cspeed)
+
+#daul_sim
+mean(dsim1)
+median(dsim1)
+mode(dsim1)
+range(dsim1)
+
+#fc
+mean(fc2)
+median(fc2)
+mode(fc2)
+range(fc2)
+
+#four_g
+mean(fg1)
+median(fg1)
+mode(fg1)
+range(fg1)
+
+#int_memory
+mean(int_mem)
+median(int_mem)
+mode(int_mem)
+range(int_mem)
+
+#m_dep
+mean(m_dep1)
+median(m_dep1)
+mode(m_dep1)
+range(m_dep1)
+
+#mobile_wt
+mean(mobile_wt1)
+median(mobile_wt1)
+mode(mobile_wt1)
+range(mobile_wt1)
+
+#n_cores1
+mean(n_cores1)
+median(n_cores1)
+mode(n_cores1)
+range(n_cores1)
+
+#pc1
+mean(pc1)
+median(pc1)
+mode(pc1)
+range(pc1)
+
+#px_height1
+mean(px_height1)
+median(px_height1)
+mode(px_height1)
+range(px_height1)
+
+#px_width1
+mean(px_width1)
+median(px_width1)
+mode(px_width1)
+range(px_width1)
+
+#ram1
+mean(ram1)
+median(ram1)
+mode(ram1)
+range(ram1)
+
+#sc_h1
+mean(sc_h1)
+median(sc_h1)
+mode(sc_h1)
+range(sc_h1)
+
+#sc_w1
+mean(sc_w1)
+median(sc_w1)
+mode(sc_w1)
+range(sc_w1)
+
+#talk_time1
+mean(talk_time1)
+median(talk_time1)
+mode(talk_time1)
+range(talk_time1)
+
+#three_g1
+mean(three_g1)
+median(three_g1)
+mode(three_g1)
+range(three_g1)
+
+#touch_screen1
+mean(touch_screen1)
+median(touch_screen1)
+mode(touch_screen1)
+range(touch_screen1)
+
+#wifi1
+mean(wifi1)
+median(wifi1)
+mode(wifi1)
+range(wifi1)
+
+#shoudl I use normalised versions?
+```
+
+```{r}
+install.packages("ggplot2", repos = "http://cran.us.r-project.org")
+library(ggplot2)
+
+bpowerbox<-ggplot(data = mbdat2, mapping = aes(x = " ", y =bpower)) +   
+  geom_boxplot(alpha=0.9) 
+bluebox<-ggplot(data = mbdat2, mapping = aes(x = " " , y =blue )) +   
+  geom_boxplot(alpha=0.9) 
+cspeedbox<-ggplot(data = mbdat2, mapping = aes(x = " " , y =cspeed)) +   
+  geom_boxplot(alpha=0.9)
+print(cspeedbox)
+dsimbox<-ggplot(data = mbdat2, mapping = aes(x = " " , y =dsim )) +   
+  geom_boxplot(alpha=0.9) 
+fc2box<-ggplot(data = mbdat2, mapping = aes(x = " " , y =fc2)) +   
+  geom_boxplot(alpha=0.9) 
+fgbox<-ggplot(data = mbdat2, mapping = aes(x = " " , y =fg)) +   
+  geom_boxplot(alpha=0.9) 
+int_memorybox<-ggplot(data = mbdat2, mapping = aes(x = " " , y =int_memory2)) + geom_boxplot(alpha=0.9) 
+m_depbox<-ggplot(data = mbdat2, mapping = aes(x = " " , y =m_dep2)) +   
+  geom_boxplot(alpha=0.9) 
+mobile_wtbox<-ggplot(data = mbdat2, mapping = aes(x = " " , y =mobile_wt1)) + 
+  geom_boxplot(alpha=0.9) 
+n_coresbox<-ggplot(data = mbdat2, mapping = aes(x = " " , y =n_cores1)) +   
+  geom_boxplot(alpha=0.9) 
+pcbox<-ggplot(data = mbdat2, mapping = aes(x = " " , y =pc1)) +   
+  geom_boxplot(alpha=0.9) 
+px_heightbox<-ggplot(data = mbdat2, mapping = aes(x = " " , y =px_height1)) + 
+  geom_boxplot(alpha=0.9) 
+px_widthtbox<-ggplot(data = mbdat2, mapping = aes(x = " " , y =px_width1)) + 
+  geom_boxplot(alpha=0.9) 
+rambox<-ggplot(data = mbdat2, mapping = aes(x = " " , y =ram1)) + 
+  geom_boxplot(alpha=0.9) 
+sc_hbox<-ggplot(data = mbdat2, mapping = aes(x = " " , y =sc_h1)) + 
+  geom_boxplot(alpha=0.9) 
+sc_wbox<-ggplot(data = mbdat2, mapping = aes(x = " " , y =sc_w1)) + 
+  geom_boxplot(alpha=0.9) 
+talk_timebox<-ggplot(data = mbdat2, mapping = aes(x = " " , y =talk_time1)) + 
+  geom_boxplot(alpha=0.9) 
+three_gbox<-ggplot(data = mbdat2, mapping = aes(x = "" , y =three_g1)) + 
+  geom_boxplot(alpha=0.9) 
+touch_screenbox<-ggplot(data = mbdat2, mapping = aes(x = " " , y=touch_screen))
+  geom_boxplot(alpha=0.9) 
+wifibox<-ggplot(data = mbdat2, mapping = aes(x = " " , y =wifi)) + 
+  geom_boxplot(alpha=0.9) 
+
+
+```
+
+```{r}
+
+
+#normalised
+boxplot(bpower3, blue, cspeed2, dsim1, fc3, fg1, int_memory3, m_dep3, mobile_wt3, n_cores3, pc3, px_height3, px_width3, ram3, sc_h3, sc_w3, talk_time3, three_g1, touch_screen1, wifi1,
+main = "Mobile Phone data for comparison",
+at = c(1,2,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21),
+names = c('bpower3', 'blue', 'cspeed2', 'dsim1', 'fc3', 'fg1', 'int_memory3', 'm_dep3', 'mobile_wt3', 'n_cores3', 'pc3', 'px_height3', 'px_widtht3', 'ram3', 'sc_h3', 'sc_w3', 'talk_time3', 'three_g1', 'touch_screen1', 'wifi1'),
+las = 2,
+col = c("orange"),
+border = "brown"
+)
+```
+
+
+```{r}
+#unormalised
+#normalised
+boxplot(bpower2, blue, cspeed, dsim1, fc2, fg1, int_memory2, m_dep2, mobile_wt2, n_cores2, pc2, px_height1, px_width2, ram2, sc_h1, sc_w1, talk_time1, three_g1, touch_screen1, wifi1,
+main = "Mobile Phone data for comparison",
+at = c(1,2,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21),
+names = c('bpower3', 'blue', 'cspeed2', 'dsim1', 'fc3', 'fg1', 'int_memory3', 'm_dep3', 'mobile_wt3', 'n_cores3', 'pc3', 'px_height3', 'px_widtht3', 'ram3', 'sc_h3', 'sc_w3', 'talk_time3', 'three_g1', 'touch_screen1', 'wifi1'),
+las = 2,
+col = c("orange"),
+border = "brown"
+)
+```
+
+
+```{r}
